@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS tb_sellers_sgmnt;
+CREATE TABLE tb_sellers_sgmnt AS     
+    
     SELECT T1.*,
             CASE WHEN pct_receita <= 0.5 AND pct_freq <= 0.5 THEN 'B.VAL B.FREQ'
             WHEN pct_receita > 0.5 AND pct_freq <= 0.5 THEN 'ALTO VALOR'
@@ -9,7 +12,9 @@
             CASE WHEN qtde_dias_base <= 60 THEN 'INICIO'
             WHEN qtde_dias_ult_venda >= 300 THEN 'RETENCAO'
             ELSE 'ATIVO'
-            END AS SEGMENTO_VIDA
+            END AS SEGMENTO_VIDA,
+
+            '2018-06-01' AS DT_SGMNT
 
     FROM (
 
@@ -56,3 +61,5 @@
 
     ) AS T1
 
+    WHERE seller_id IS NOT NULL
+;
