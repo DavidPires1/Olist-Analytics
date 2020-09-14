@@ -1,6 +1,3 @@
-DROP TABLE IF EXISTS tb_sellers_sgmnt;
-CREATE TABLE tb_sellers_sgmnt AS     
-    
     SELECT T1.*,
             CASE WHEN pct_receita <= 0.5 AND pct_freq <= 0.5 THEN 'B.VAL B.FREQ'
             WHEN pct_receita > 0.5 AND pct_freq <= 0.5 THEN 'ALTO VALOR'
@@ -62,4 +59,4 @@ CREATE TABLE tb_sellers_sgmnt AS
     ) AS T1
 
     WHERE seller_id IS NOT NULL
-;
+
