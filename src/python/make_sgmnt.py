@@ -4,6 +4,7 @@ import argparse
 import pandas as pd
 
 import sqlite3
+import utils
 
 
 
@@ -11,6 +12,7 @@ import sqlite3
 BASE_DIR  = os.path.dirname( os.path.dirname ( os.path.dirname( os.path.dirname(__file__) ) ) )
 DATA_DIR = os.path.join( BASE_DIR, 'data')
 SQL_DIR = os.path.join( BASE_DIR, 'src', 'sql')
+
 
 # Parser de data para fazer foto
 parser = argparse.ArgumentParser()
@@ -23,16 +25,12 @@ mes = int(date_end.split('-')[1])
 date_init = f'{ano}-{mes}-01'
 
 # Importa a query
-with open ( os.path.join( SQL_DIR, 'segmentos.sql')) as query_files:
-    query = query_files.read()
-
+query = utils.import_query(os.path.join( SQL_DIR, 'segmentos.sql'))
 query = query.format( date_init = date_init,
                      date_end = date_end )
 
 # Abrindo conexão com banco...
-str_connection = 'sqlite:///{path}'
-str_connection = str_connection.format( path = os.path.join ( DATA_DIR, 'olist.db') )
-connection = sqlalchemy.create_engine( str_connection )
+conn = utils.connect_db()
 
 create_query = f'''
 CREATE TABLE tb_sellers_sgmnt AS
@@ -46,7 +44,6 @@ INSERT INTO tb_sellers_sgmnt
 ;'''
 
 try:
-    connection.execute( create_query)
+    utils.execute_many_sql( create_query, conn)
 except:
-    for q in insert_query.split(";")[:-1]:
-        connection.execute( q )
+    utils.execute_many_sql( insert_query, conn, verbose=True)
